@@ -124,6 +124,8 @@ $result = $result->fetchAll();
     <button type="submit">Search</button>
 </form>
 <br>
+<a href="./show_cat.html.php">Category Page</a>
+<br>
 <a href="../index.php?add=yes">Add Book</a>
 <br>
 <br>

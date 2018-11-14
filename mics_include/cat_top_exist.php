@@ -1,62 +1,40 @@
 <?php
 
 /**
- * top category(variable name):$cat
- * sub category(variable name):$sub_cat
+ * top category(variable name):$add_top_cat
+ * sub category(variable name):$add_sub_cat
  */
 
 //Query into database, if the top category exists:
 //Prepared statement
-$sql_select_cat = <<<SQL
-SELECT * FROM categories WHERE name ='{$cat}'
-SQL;
-try {
-    $prep = $db->prepare($sql_select_cat);
-    $prep->execute();
-    $result = $prep->fetch();
-} catch (PDOException $ex) {
-    exit($ex);
-}
 
-//Top category not exists, create top category
-if (!$result) {
+
+//If the top catecory is empty, enter as parent
+if(empty($add_top_cat)){
     $sql_insert_top_cat = <<<SQL
-INSERT INTO categories SET name='{$cat}'
+INSERT INTO categories SET name='{$add_sub_cat}', descrip='{$desc}'
 SQL;
 
     try {
         $prep = $db->prepare($sql_insert_top_cat);
-
         $prep->execute();
-        $parent_id = (int) $db->lastInsertId();
     } catch (PDOException $ex) {
         exit($ex);
     }
-//When the top category exist, just get the id
-} else {
-    $parent_id = (int) $result['id'];
-}
-
-
-//If the sub-category has not empty value, enter the sub-category with parent_id is equal to  the id of
-//corresponding pparent category
-if (!empty($sub_cat)) {
-    $sql_insert_sub_cat = <<<SQL
-INSERT INTO categories(name,parent_id) VALUES('{$sub_cat}','{$parent_id}')
+}else{
+    $sql_insert_sub_cat =<<<SQL
+INSERT INTO categories SET name= "{$add_sub_cat}",descrip='{$desc}', parent_id='{$add_top_cat}'
 SQL;
 
-    try {
-        $insert= $db->exec($sql_insert_sub_cat);
-        $sub_cat_id = $db->lastInsertId();
-    } catch (PDOException $ex) {
-        exit($ex);
-    }
+try {
+    $prep = $db->prepare($sql_insert_sub_cat);
+    $prep->execute();
+} catch (PDOException $ex) {
+    exit($ex);
+}
+
 
 }
-//Get the last inserted id for putting in the book_cat field of  book category(Book_cat field is the foreign key)
-try{
-    $last_inserted_cat_id = $db->lastInsertId();
-}catch(PDOException $ex){
-    exit($ex->getMessage());
-}
+
+
 

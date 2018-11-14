@@ -30,8 +30,26 @@ $sql_select = "SELECT user_name FROM admin WHERE id='$user_id'";
  }
 
 //Select book to be updated
+
+
+// An array containing database fields
+$field_array = ['b.id',
+    'b.title',
+    'b.author',
+    'b.summery',
+    'b.date_of_pub',
+    'b.copy_avl',
+    'b.book_cover',
+    'b.published_at',
+    'b.user_name',
+    'c.name',
+    'c.status'
+];
+
+$fields = implode(",", $field_array);
+
 $sql_select = <<<SQL
-SELECT * FROM book WHERE (id={$book_id} AND user_name = "{$user_name}")
+SELECT {$fields} FROM book b INNER JOIN categories c ON b.book_cat=c.id WHERE (b.id={$book_id} AND b.user_name = "{$user_name}")
 SQL;
 try{
     $result=$db->query($sql_select);
@@ -65,18 +83,22 @@ $book_cover = $result['book_cover'];
     <label class="block" for="title">Book Title:
         <input type="text" name="title" value="<?=$result['title']?>">
     </label>
+    <br>
     <label class="block" for="author">Author name
         <input type="text" name="author" value="<?=$result['author']?>">
     </label>
     <br>
+
     <label for="top_cat">Top Category:
-        <input id="top_cat" type="text" name="top_cat" value="">
+        <input id="top_cat" type="text" name="top_cat" value="<?=$result['name']?>">
     </label>
+
     <br><br>
     <label for="sub_cat">Sub Category:
-        <input id="sub_cat" type="text" name="sub_cat" value="">
+        <input id="sub_cat" type="text" name="sub_cat" value="<?=$result['parent_ic']?>">
     </label>
     <br><br>
+
     <label class="block" for="date_pub">Date of publication:
         <input id="date_pub" type="date" name="date_pub" value="<?=$result['date_of_pub']?>" placeholder="EX @ 2018-11-04">
     </label>
