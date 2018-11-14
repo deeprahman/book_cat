@@ -66,14 +66,30 @@ if ($pageno < 1) {
 $offset = ($pageno - 1) * $rows_per_page;
 
 //Select all  uploaded books from the book table
-$sql_select = "SELECT * FROM book WHERE user_name='$user_name' LIMIT $offset,$rows_per_page";
-try{
-    $result=$db->query($sql_select);
-}catch(PDOExtension $ex){
+
+// An array containing database fields
+$field_array = ['b.id',
+    'b.title',
+    'b.author',
+    'b.summery',
+    'b.date_of_pub',
+    'b.copy_avl',
+    'b.book_cover',
+    'b.published_at',
+    'b.user_name',
+    'c.name',
+    'c.status'
+];
+
+$fields = implode(",", $field_array);
+
+$sql_select = "SELECT $fields FROM book b INNER JOIN categories c ON b.book_cat=c.id WHERE user_name='$user_name' LIMIT $offset,$rows_per_page";
+try {
+    $result = $db->query($sql_select);
+} catch (PDOExtension $ex) {
     exit($ex);
 }
 $result = $result->fetchAll();
-
 
 #The name of the array that contains all results is $result
 
@@ -114,23 +130,23 @@ $result = $result->fetchAll();
 <hr>
 <!-- Pagination Buttons -->
 <div class="pagination">
-    <?php if($pageno === 1):?>
-        <?= "FRIST PREV"?>
-    <?php else:?>    
-        <a href="<?=$_SERVER['PHP_SELF'].'?pageno=1' ?>">FIRST</a>
+    <?php if ($pageno === 1): ?>
+        <?="FRIST PREV"?>
+    <?php else: ?>
+        <a href="<?=$_SERVER['PHP_SELF'] . '?pageno=1'?>">FIRST</a>
         <?php $prevpage = $pageno - 1?>
-        <a href='<?=$_SERVER['PHP_SELF']."?pageno=$prevpage" ?>'>PREV</a>  
-    <?PHP endif?> 
+        <a href='<?=$_SERVER['PHP_SELF'] . "?pageno=$prevpage"?>'>PREV</a>
+    <?PHP endif?>
 
-    <?= "(Page $pageno of $lastpage)"?> 
+    <?="(Page $pageno of $lastpage)"?>
 
-    <?php if($pageno === $lastpage):?>
-        <?= "NEXT LAST"?>
-    <?php else:?>  
+    <?php if ($pageno === $lastpage): ?>
+        <?="NEXT LAST"?>
+    <?php else: ?>
         <?php $nextpage = $pageno + 1?>
-        <a href='<?=$_SERVER['PHP_SELF']."?pageno=$nextpage" ?>'>NEXT</a>
-        <a href='<?=$_SERVER['PHP_SELF']."?pageno=$lastpage" ?>'>LAST</a>  
-    <?PHP endif?> 
+        <a href='<?=$_SERVER['PHP_SELF'] . "?pageno=$nextpage"?>'>NEXT</a>
+        <a href='<?=$_SERVER['PHP_SELF'] . "?pageno=$lastpage"?>'>LAST</a>
+    <?PHP endif?>
 
 </div>
 
@@ -146,10 +162,10 @@ $result = $result->fetchAll();
         <th>Book Added By</th>
         <th>Number of Available Copy</th>
         <th>Published At</th>
-        <th>Category</th>
-        <th>Status</th>
         <th>Cover Picture</th>
         <th>Action</th>
+        <th>Category</th>
+        
     </tr>
     <?php foreach ($result as $row): ?>
         <tr>
@@ -166,6 +182,8 @@ $result = $result->fetchAll();
                 <!-- ---------------------------------------------------------------------------- -->
             <td><a href="<?=$img_show?>"><img src="<?=$img_add?>" alt="cover Pic"></a></td>
             <td><a onclick="return confirm('Do you want to delete the book?')" href="../index.php?del=yes&id=<?=$row['id']?>" >Delete Book</a> / <a href="./update.html.php?update=yes&book_id=<?=$row['id']?>&usr_id=<?=$user_id?>">Update Book</a></td>
+            <td><?=$row['name']?></td>
+            
         </tr>
     <?php endforeach?>
 </table>

@@ -55,7 +55,7 @@ class ImageResize
         string $dstination
     ) {
         $this->tar_image = $target;
-        $this->src = "C:\\xampp\\htdocs\\rs_book\\files\\" . $this->tar_image;
+        $this->src = "C:\\xampp\\htdocs\\rs_book_cat\\files\\" . $this->tar_image;
         $this->image_type = mime_content_type($this->src);
         $this->dst_path = $dstination;
         if ($this->image_type === "image/jpeg" || $this->image_type === "image/png") {

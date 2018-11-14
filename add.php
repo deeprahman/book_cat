@@ -41,11 +41,14 @@ if ($_SESSION['file']['error'] == UPLOAD_ERR_OK) {
  * get the id.
  * If the top category exists, get the id
  * 
- * If the sub category is not empty Enter the sub-catecory with  with the parent_id  equal to the id of the correnponsing
+ * If the sub category is not empty: Enter the sub-catecory with  with the parent_id  equal to the id of the correnponsing
  * parent category
  */
 
 include_once "mics_include/cat_top_exist.php";
+
+
+
 
 
 
@@ -58,7 +61,7 @@ INSERT INTO categories(name, status, parent_id) VALUES(:name, :status, :parent_i
 SQL;
 
 //Insert query for book table, use the lastInsertId from the insert query for category table
-$sql_insert_book = "INSERT INTO book (title,author,summery,date_of_pub,copy_avl,book_cover,user_name) VALUES (:title,:author,:summery,:date_of_pub,:copy_avl,:book_cover,:user_name)";
+$sql_insert_book = "INSERT INTO book (title,author,summery,date_of_pub,copy_avl,book_cover,user_name,book_cat) VALUES (:title,:author,:summery,:date_of_pub,:copy_avl,:book_cover,:user_name,:book_cat)";
 try {
     //get the user name
     $user_name = $db->query($sql_select);
@@ -75,6 +78,7 @@ try {
         ':copy_avl' => $avs_copy,
         ':book_cover' => $img_new_name,
         ':user_name' => $user_name,
+        ':book_cat' => $last_inserted_cat_id
     ];
     $prep->execute($params);
 
@@ -82,6 +86,10 @@ try {
     $_SESSION['msg'] = $ex->getMessage();
     exit();
 }
+
+
+
+
 
 // File upload section
 

@@ -32,7 +32,7 @@ SQL;
     } catch (PDOException $ex) {
         exit($ex);
     }
- 
+//When the top category exist, just get the id
 } else {
     $parent_id = (int) $result['id'];
 }
@@ -53,5 +53,10 @@ SQL;
     }
 
 }
+//Get the last inserted id for putting in the book_cat field of  book category(Book_cat field is the foreign key)
+try{
+    $last_inserted_cat_id = $db->lastInsertId();
+}catch(PDOException $ex){
+    exit($ex->getMessage());
+}
 
-exit("end");
