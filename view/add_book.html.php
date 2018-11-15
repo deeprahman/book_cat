@@ -6,7 +6,24 @@ if(!isset($_SESSION['admin'])){
 }
 
 require_once __DIR__."/header.html.php";
+require_once "../d_connect.php";
 ?> 
+
+<?php
+//Select all name and id from category table
+
+$sql_select_all_cat = <<<SQL
+SELECT id, name FROM categories WHERE parent_id = 0;
+SQL;
+
+try{
+    $result = $db->query($sql_select_all_cat);
+    $result = $result->fetchAll();
+}catch(PDOException $ex){
+    exit($ex);
+}
+
+?>
 <!-- ---------------------------------------------------------------------------------------------- -->
 <style>
  .block{
@@ -27,11 +44,18 @@ require_once __DIR__."/header.html.php";
     </label>
     <br>
     <label for="top_cat">Top Category:
-        <input id="top_cat" type="text" name="top_cat" value="">
+        <select name="top" id="category">
+        <option value="0">No Category Selected</option>
+        <?php foreach($result as $row):?>
+        <option value="<?=$row['id']?>"><?=$row['name']?></option>
+        <?php endforeach?>    
+        </select>
     </label>
     <br><br>
-    <label for="sub_cat">Sub Category:
-        <input id="sub_cat" type="text" name="sub_cat" value="">
+    <label for="sub">Sub Category:
+        <select name="sub_cat" id="sub">
+            <option value="0" selected>No Sub Category Seected</option>
+        </select>
     </label>
     <br><br>
     <label class="block"  class="block"  for="date_pub">Date of publication:
@@ -50,6 +74,7 @@ require_once __DIR__."/header.html.php";
     <br>
     <button type="submit" name="add_book" value="submit">ADD THE BOOK</button>
 </form>
+<script src="./js/cat_ajax.js"></script>
 <!-- ---------------------------------------------------------------------------------------------- -->
 <?php
 require_once __DIR__."/footer.html.php";

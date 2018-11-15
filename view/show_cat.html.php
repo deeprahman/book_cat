@@ -23,8 +23,6 @@ $result = $result->fetchAll();
 }
 
 
-
-
 ?>
 
 
@@ -42,9 +40,9 @@ $result = $result->fetchAll();
 
 </style>
 <h1>The Catagory Page</h1>
-
-
-<hr><br><br>
+<br><hr>
+<a class="center" href="..">Book View</a>
+<br><br>
 <a class="center" href="./category.html.php">Add New Category</a>
 
 <!-- --------------Catagory Table--------------------- -->
@@ -79,7 +77,7 @@ $result = $result->fetchAll();
             <!-- -------------------------------------- -->
             
             <td><?=$row['descrip']?></td>
-            <td><a onclick="return confirm('Do you want to delete the book?')" href="">Delete Category</a> / <a href="">Edit Category</a></td>
+            <td><a onclick="return confirm('Do you want to delete the book?')" href="../delete_cat.php?parent=<?=$row['parent_id']?>&cat_id=<?=$row['id']?>">Delete Category</a> / <a href="./edit_cat.html.php?parent=<?=$row['parent_id']?>&cat_id=<?=$row['id']?>">Edit Category</a></td>
 
             
         </tr>

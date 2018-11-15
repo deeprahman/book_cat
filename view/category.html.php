@@ -24,24 +24,17 @@ try {
 }
 
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-if(isset($_POST['add_cat'])){
+if( isset($_POST['add_cat']) && !empty($_POST['sub'])){
 
     $add_top_cat = filter_input(INPUT_POST, 'top', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     $add_sub_cat = filter_input(INPUT_POST, 'sub', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     $desc = filter_input(INPUT_POST, 'des', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
+    include_once "../mics_include/cat_top_exist.php";
+    header("location:./show_cat.html.php");
 }
 
-/**
- * Query into the database if the top category exists;
- * If the top category does not exists then create the top category using the given name with parent_id :0 and
- * get the id.
- * If the top category exists, get the id
- *
- * If the sub category is not empty: Enter the sub-catecory with  with the parent_id  equal to the id of the correnponsing
- * parent category
- */
-include_once "../mics_include/cat_top_exist.php";
+
 
 // +++++++++++++++++++fetching result for Top and Sub catagory++++++++++++++++++++
 
@@ -62,18 +55,18 @@ try {
 //Search database for id of the parent category
 
 //Only run If $sel_top_cat is not empty
-if (!empty($sel_top_cat)) {
-    $sql_select_id_par = <<<SQL
-SELECT name FROM categories WHERE parent_id= $sel_top_cat
-SQL;
-    try {
-        $search_sub_cat = $db->query($sql_select_id_par);
-        $result_sub = $search_sub_cat->fetchAll();
-    } catch (PDOException $ex) {
-        exit($ex);
-    }
+// if (!empty($sel_top_cat)) {
+//     $sql_select_id_par = <<<SQL
+// SELECT name FROM categories WHERE parent_id= $sel_top_cat
+// SQL;
+//     try {
+//         $search_sub_cat = $db->query($sql_select_id_par);
+//         $result_sub = $search_sub_cat->fetchAll();
+//     } catch (PDOException $ex) {
+//         exit($ex);
+//     }
 
-}
+// }
 
 ?>
 
@@ -94,6 +87,7 @@ SQL;
 </style>
 
 <h1>Add Category Page</h1>
+<a href="./show_cat.html.php">Back To Category Table</a>
 <br><br><br>
 <form action="" method="post">Sub Category name:
     <label for="sub_cat">

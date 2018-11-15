@@ -5,6 +5,7 @@ require_once __DIR__ . "/header.html.php";
 // Select all from table book
 require_once "../d_connect.php";
 
+
 if (!isset($_SESSION['admin'])) {
     header("location:../");
     exit();
@@ -77,13 +78,13 @@ $field_array = ['b.id',
     'b.book_cover',
     'b.published_at',
     'b.user_name',
-    'c.name',
-    'c.status'
+    'b.cat_id'
+    
 ];
 
 $fields = implode(",", $field_array);
 
-$sql_select = "SELECT $fields FROM book b INNER JOIN categories c ON b.book_cat=c.id WHERE user_name='$user_name' LIMIT $offset,$rows_per_page";
+$sql_select = "SELECT * FROM book b LEFT JOIN categories c ON b.cat_id=c.id WHERE user_name='$user_name' LIMIT $offset,$rows_per_page";
 try {
     $result = $db->query($sql_select);
 } catch (PDOExtension $ex) {

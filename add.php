@@ -35,33 +35,11 @@ if ($_SESSION['file']['error'] == UPLOAD_ERR_OK) {
 }
 
 
-/**
- * Query into the database if the top category exists;
- * If the top category does not exists then create the top category using the given name with parent_id :0 and
- * get the id.
- * If the top category exists, get the id
- * 
- * If the sub category is not empty: Enter the sub-catecory with  with the parent_id  equal to the id of the correnponsing
- * parent category
- */
-
-include_once "mics_include/cat_top_exist.php";
-
-
-
-
-
-
 //find the user name
 $sql_select = "SELECT user_name FROM admin WHERE id='$user_id'";
 
-//Insert query for the category table, get the lastInsertID
-$sql_insert_cat = <<<SQL
-INSERT INTO categories(name, status, parent_id) VALUES(:name, :status, :parent_id)
-SQL;
-
-//Insert query for book table, use the lastInsertId from the insert query for category table
-$sql_insert_book = "INSERT INTO book (title,author,summery,date_of_pub,copy_avl,book_cover,user_name,book_cat) VALUES (:title,:author,:summery,:date_of_pub,:copy_avl,:book_cover,:user_name,:book_cat)";
+//Insert query for book table, use the lastInsertId from the insert query 
+$sql_insert_book = "INSERT INTO book (title,author,summery,date_of_pub,copy_avl,book_cover,user_name,cat_id) VALUES (:title,:author,:summery,:date_of_pub,:copy_avl,:book_cover,:user_name,:cat_id)";
 try {
     //get the user name
     $user_name = $db->query($sql_select);
@@ -78,7 +56,7 @@ try {
         ':copy_avl' => $avs_copy,
         ':book_cover' => $img_new_name,
         ':user_name' => $user_name,
-        ':book_cat' => $last_inserted_cat_id
+        ':cat_id' => $sub_cat
     ];
     $prep->execute($params);
 
