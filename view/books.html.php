@@ -69,7 +69,7 @@ $offset = ($pageno - 1) * $rows_per_page;
 //Select all  uploaded books from the book table
 
 // An array containing database fields
-$field_array = ['b.id',
+$field_array = ['b.id as book_id',
     'b.title',
     'b.author',
     'b.summery',
@@ -78,13 +78,15 @@ $field_array = ['b.id',
     'b.book_cover',
     'b.published_at',
     'b.user_name',
-    'b.cat_id'
+    'b.cat_id',
+    'c.id',
+    'c.name'
     
 ];
 
 $fields = implode(",", $field_array);
 
-$sql_select = "SELECT * FROM book b LEFT JOIN categories c ON b.cat_id=c.id WHERE user_name='$user_name' LIMIT $offset,$rows_per_page";
+$sql_select = "SELECT $fields FROM book b LEFT JOIN categories c ON b.cat_id=c.id WHERE user_name='$user_name' LIMIT $offset,$rows_per_page";
 try {
     $result = $db->query($sql_select);
 } catch (PDOExtension $ex) {
@@ -184,7 +186,7 @@ $result = $result->fetchAll();
                 <?php $img_show = ($row['book_cover'] !== "default.png") ? '../files/' . $row['book_cover'] : '../asset/' . $row['book_cover']?>
                 <!-- ---------------------------------------------------------------------------- -->
             <td><a href="<?=$img_show?>"><img src="<?=$img_add?>" alt="cover Pic"></a></td>
-            <td><a onclick="return confirm('Do you want to delete the book?')" href="../index.php?del=yes&id=<?=$row['id']?>" >Delete Book</a> / <a href="./update.html.php?update=yes&book_id=<?=$row['id']?>&usr_id=<?=$user_id?>">Update Book</a></td>
+            <td><a onclick="return confirm('Do you want to delete the book?')" href="../index.php?del=yes&id=<?=$row['book_id']?>" >Delete Book</a> / <a href="./update.html.php?update=yes&book_id=<?=$row['book_id']?>&usr_id=<?=$user_id?>">Update Book</a></td>
             <td><?=$row['name']?></td>
             
         </tr>

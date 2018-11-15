@@ -33,7 +33,7 @@ $sql_select = "SELECT user_name FROM admin WHERE id='$user_id'";
 
 
 // An array containing database fields
-$field_array = ['b.id',
+$field_array = ['b.id as book_id',
     'b.title',
     'b.author',
     'b.summery',
@@ -42,14 +42,17 @@ $field_array = ['b.id',
     'b.book_cover',
     'b.published_at',
     'b.user_name',
-    'c.name',
-    'c.status'
+    'b.cat_id',
+    'c.id',
+    'c.name'
+    
 ];
+
 
 $fields = implode(",", $field_array);
 
 $sql_select = <<<SQL
-SELECT {$fields} FROM book b INNER JOIN categories c ON b.book_cat=c.id WHERE (b.id={$book_id} AND b.user_name = "{$user_name}")
+SELECT {$fields} FROM book b INNER JOIN categories c ON b.cat_id=c.id WHERE (b.id={$book_id} AND b.user_name = "{$user_name}")
 SQL;
 try{
     $result=$db->query($sql_select);
@@ -69,6 +72,26 @@ $_SESSION['id'] = $book_id;
 
 //Get the book cover name
 $book_cover = $result['book_cover'];
+
+//Select all top category
+
+//Select all name and id from category table
+
+$sql_select_all_cat = <<<SQL
+SELECT id, name FROM categories WHERE parent_id = 0;
+SQL;
+
+try{
+    $top_cat = $db->query($sql_select_all_cat);
+    $top_cat = $top_cat->fetchAll();
+}catch(PDOException $ex){
+    exit($ex);
+}
+
+
+
+
+
 
 ?> 
 <!-- ---------------------------------------------------------------------------------------------- -->
@@ -90,12 +113,19 @@ $book_cover = $result['book_cover'];
     <br>
 
     <label for="top_cat">Top Category:
-        <input id="top_cat" type="text" name="top_cat" value="<?=$result['name']?>">
+        <select name="top" id="category">
+        <option value="0">No Category Selected</option>
+        <?php foreach($top_cat as $row):?>
+        <option value="<?=$row['id']?>"><?=$row['name']?></option>
+        <?php endforeach?>    
+        </select>
     </label>
 
     <br><br>
     <label for="sub_cat">Sub Category:
-        <input id="sub_cat" type="text" name="sub_cat" value="<?=$result['parent_ic']?>">
+        <select name="sub_cat" id="sub">
+            <option value="0" selected>No Sub Category Seected</option>
+        </select>
     </label>
     <br><br>
 
@@ -121,6 +151,7 @@ $book_cover = $result['book_cover'];
 <span id="user_id" hidden><?=$_SESSION['admin']?></span>
 <span id="book_cover" hidden><?=$book_cover?></span>
 <script src="./js/remove.js"></script>
+<script src="./js/cat_ajax.js"></script>
 <!-- ---------------------------------------------------------------------------------------------- -->
 <?php
 require_once __DIR__."/footer.html.php";
