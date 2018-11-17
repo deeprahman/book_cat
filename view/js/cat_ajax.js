@@ -2,7 +2,6 @@
 $(document).ready(function () {
     $("#category").change(function () {
         var top_cat = $(this).val();
-
         $.ajax(
             {
                 url: "../sub_cat.php",

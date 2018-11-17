@@ -112,9 +112,9 @@ try{
     </label>
     <br>
 
-    <label for="top_cat">Select Top Category:
-        <select name="top" id="category">
-        <option value="0">No Category Selected</option>
+    <label for="top_cat"> Select a Top Category:
+        <select name="top" id="category" required>
+        <option value="">No Top Category Selected</option>
         <?php foreach($top_cat as $row):?>
         <option value="<?=$row['id']?>"><?=$row['name']?></option>
         <?php endforeach?>    
@@ -122,9 +122,9 @@ try{
     </label>
 
     <br><br>
-    <label for="sub_cat">Select Sub Category:
-        <select name="sub_cat" id="sub">
-            <option value="0" selected>No Sub Category Seected</option>
+    <label for="sub_cat">Please Select Sub Category:
+        <select name="sub_cat" id="sub" required>
+            <option value="" selected>No Sub Category Seected</option>
         </select>
     </label>
     <br><br>

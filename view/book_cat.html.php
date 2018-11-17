@@ -26,6 +26,41 @@ try {
 <?php
 
 
+//Feth all top category
+include_once "../mics_include/top_cat_fetch.php";
+
+
+//Select all  uploaded books from the book table
+
+// An array containing database fields
+$field_array = ['b.id as book_id',
+    'b.title',
+    'b.author',
+    'b.summery',
+    'b.date_of_pub',
+    'b.copy_avl',
+    'b.book_cover',
+    'b.published_at',
+    'b.user_name',
+    'b.cat_id',
+    'c.id',
+    'c.name',
+
+];
+
+$fields = implode(",", $field_array);
+
+$sql_select = "SELECT $fields FROM book b LEFT JOIN categories c ON b.cat_id=c.id WHERE user_name='$user_name' ";
+try {
+    $result = $db->query($sql_select);
+    $result = $result->fetchAll();
+} catch (PDOExtension $ex) {
+    exit($ex);
+}
+
+
+
+
 ?>
 
 <!-- ===============================Template========================================================== -->
@@ -46,7 +81,7 @@ try {
     unset($_SESSION['msg']);
 }?>
 
-<h1 class ="center">BooK by Category</h1>
+<h1 class ="center">Category-wise Book View</h1>
 <!-- Add book -->
 <br>
 
@@ -59,7 +94,7 @@ try {
 <label for="top">Filter by
 <select name="top" id="category">
         <option value="0">Top Category</option>
-        <?php foreach ($top_cat as $row): ?>
+        <?php foreach ($fetch_top as $row): ?>
         <option value="<?=$row['id']?>"><?=$row['name']?></option>
         <?php endforeach?>
         </select>
@@ -78,25 +113,11 @@ try {
 <br>
 <hr>
 
-<table>
-    <tr>
-
-        <th>Title</th>
-        <th>Author</th>
-        <th>Summery</th>
-        <th>Date of Publication</th>
-        <th>Book Added By</th>
-        <th>Number of Available Copy</th>
-        <th>Published At</th>
-        <th>Cover Picture</th>
-        <th>Action</th>
-        <th>Category</th>
-
-    </tr>
-    <!-- Table body like book.html.php page -->
+<table id="show">
+    
 </table>
 <script src="./js/cat_ajax.js"></script>
-
+<script src="./js/top_sub_ajax.js"></script>
 
 
 <!-- ====================================================================================================== -->
