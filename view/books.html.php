@@ -5,7 +5,6 @@ require_once __DIR__ . "/header.html.php";
 // Select all from table book
 require_once "../d_connect.php";
 
-
 if (!isset($_SESSION['admin'])) {
     header("location:../");
     exit();
@@ -80,8 +79,8 @@ $field_array = ['b.id as book_id',
     'b.user_name',
     'b.cat_id',
     'c.id',
-    'c.name'
-    
+    'c.name',
+
 ];
 
 $fields = implode(",", $field_array);
@@ -94,7 +93,17 @@ try {
 }
 $result = $result->fetchAll();
 
-#The name of the array that contains all results is $result
+//Select all name and id from category table
+$sql_select_all_cat = <<<SQL
+SELECT id, name FROM categories WHERE parent_id = 0;
+SQL;
+
+try{
+    $top_cat = $db->query($sql_select_all_cat);
+    $top_cat = $top_cat->fetchAll();
+}catch(PDOException $ex){
+    exit($ex);
+}
 
 ?>
 
@@ -120,6 +129,10 @@ $result = $result->fetchAll();
 <h1 class ="center">This is the book view page</h1>
 <!-- Add book -->
 <br>
+
+
+<!-- ---------------------------------------------------------------------------------- -->
+<br>
 <form action="./search.html.php" method="post">
     <label for="search">Search Box:
         <input type="text" name="search" value="" placeholder="Enter Book Title">
@@ -127,7 +140,10 @@ $result = $result->fetchAll();
     <button type="submit">Search</button>
 </form>
 <br>
-<a href="./show_cat.html.php">Category Page</a>
+<br>
+
+<!-- ====================================================================== -->
+<a href="./book_cat.html.php">Category Page</a>
 <br>
 <a href="../index.php?add=yes">Add Book</a>
 <br>
@@ -170,7 +186,7 @@ $result = $result->fetchAll();
         <th>Cover Picture</th>
         <th>Action</th>
         <th>Category</th>
-        
+
     </tr>
     <?php foreach ($result as $row): ?>
         <tr>
@@ -188,11 +204,11 @@ $result = $result->fetchAll();
             <td><a href="<?=$img_show?>"><img src="<?=$img_add?>" alt="cover Pic"></a></td>
             <td><a onclick="return confirm('Do you want to delete the book?')" href="../index.php?del=yes&id=<?=$row['book_id']?>" >Delete Book</a> / <a href="./update.html.php?update=yes&book_id=<?=$row['book_id']?>&usr_id=<?=$user_id?>">Update Book</a></td>
             <td><?=$row['name']?></td>
-            
+
         </tr>
     <?php endforeach?>
 </table>
-
+<script src="./js/cat_ajax.js"></script>
 <!-- ---------JavaScript------------------- -->
 <script type="text/javascript">
 function myFunction() {

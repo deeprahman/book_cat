@@ -44,8 +44,8 @@ try{
     </label>
     <br>
     <label for="top_cat">Top Category:
-        <select name="top" id="category">
-        <option value="0">No Category Selected</option>
+        <select name="top" id="category" required>
+        <option value="">No Category Selected</option>
         <?php foreach($result as $row):?>
         <option value="<?=$row['id']?>"><?=$row['name']?></option>
         <?php endforeach?>    
@@ -53,8 +53,8 @@ try{
     </label>
     <br><br>
     <label for="sub">Sub Category:
-        <select name="sub_cat" id="sub">
-            <option value="0" selected>No Sub Category Seected</option>
+        <select name="sub_cat" id="sub" required>
+            <option value="" selected>No Sub Category Seected</option>
         </select>
     </label>
     <br><br>

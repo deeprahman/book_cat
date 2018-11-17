@@ -52,7 +52,7 @@ $field_array = ['b.id as book_id',
 $fields = implode(",", $field_array);
 
 $sql_select = <<<SQL
-SELECT {$fields} FROM book b INNER JOIN categories c ON b.cat_id=c.id WHERE (b.id={$book_id} AND b.user_name = "{$user_name}")
+SELECT {$fields} FROM book b LEFT JOIN categories c ON b.cat_id=c.id WHERE (b.id={$book_id} AND b.user_name = "{$user_name}")
 SQL;
 try{
     $result=$db->query($sql_select);
@@ -103,16 +103,16 @@ try{
 <h1>Update about the book</h1>
 <!-- Book information -->
 <form action="../update.php" method="post" enctype="multipart/form-data">
-    <label class="block" for="title">Book Title:
+    <label class="block" for="title">Current Book Title:
         <input type="text" name="title" value="<?=$result['title']?>">
     </label>
     <br>
-    <label class="block" for="author">Author name
+    <label class="block" for="author"> Current Author name
         <input type="text" name="author" value="<?=$result['author']?>">
     </label>
     <br>
 
-    <label for="top_cat">Top Category:
+    <label for="top_cat">Select Top Category:
         <select name="top" id="category">
         <option value="0">No Category Selected</option>
         <?php foreach($top_cat as $row):?>
@@ -122,18 +122,18 @@ try{
     </label>
 
     <br><br>
-    <label for="sub_cat">Sub Category:
+    <label for="sub_cat">Select Sub Category:
         <select name="sub_cat" id="sub">
             <option value="0" selected>No Sub Category Seected</option>
         </select>
     </label>
     <br><br>
 
-    <label class="block" for="date_pub">Date of publication:
+    <label class="block" for="date_pub">Current Date of publication:
         <input id="date_pub" type="date" name="date_pub" value="<?=$result['date_of_pub']?>" placeholder="EX @ 2018-11-04">
     </label>
     
-    <label class="block" for="avl_copy">Number of available copy of book:
+    <label class="block" for="avl_copy">Current Number of available copy of book:
         <input id="avl_copy" type="text" name="avl_copy" value="<?=$result['copy_avl']?>">
     </label>
     <textarea class="block" name="summery" id="" cols="30" rows="10"><?=$result['summery']?></textarea>

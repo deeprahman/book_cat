@@ -39,10 +39,12 @@ $result = $result->fetchAll();
 }
 
 </style>
-<h1>The Catagory Page</h1>
+<h1>The Catagory Table</h1>
 <br><hr>
 <a class="center" href="..">Book View</a>
-<br><br>
+<br>
+<a class="center" href="./book_cat.html.php">Category Page</a>
+<br>
 <a class="center" href="./category.html.php">Add New Category</a>
 
 <!-- --------------Catagory Table--------------------- -->
@@ -50,7 +52,7 @@ $result = $result->fetchAll();
     <tr>
         <th>Category ID</th>
         <th>Category Name</th>
-        <th>Category Type</th>
+        <th>Parent Category</th>
         <th>Description</th>
         <th>Action</th>
         

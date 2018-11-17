@@ -21,7 +21,7 @@ $title = filter_input(INPUT_POST, 'title', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 $author = filter_input(INPUT_POST, 'author', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 $summery = filter_input(INPUT_POST, 'summery', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 $date_pub = filter_input(INPUT_POST, 'date_pub', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-
+$cat_id =(int) filter_input(INPUT_POST, 'sub_cat', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 $avs_copy = (int) filter_input(INPUT_POST, 'avl_copy', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 $id = (int) $_SESSION['id'];
 
@@ -32,7 +32,8 @@ author = :author ,
 summery = :summery,
 date_of_pub = :date_of_pub,
 copy_avl = :copy_avl,
-book_cover = :book_cover
+book_cover = :book_cover,
+cat_id = :sub_cat
 WHERE id = :id
 SQL;
 
@@ -138,6 +139,7 @@ try {
         ':copy_avl' => $avs_copy,
         ':id' => $id,
         ':book_cover' => $img_name,
+        ':sub_cat' => $cat_id
     ];
     $result->execute($params);
 } catch (PDOException $ex) {
