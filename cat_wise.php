@@ -50,6 +50,9 @@ $output = <<<HTM
 HTM;
 
 foreach ($result as $row) {
+
+     $img_add = ($row['book_cover'] !== "default.png") ? '../thumb/' . $row['book_cover'] : '../asset/' . $row['book_cover'];
+
     $output .= <<<HTM
     <tr>
         <td>{$row['title']}</td>
@@ -59,7 +62,8 @@ foreach ($result as $row) {
         <td>{$row['user_name']}</td>
         <td>{$row['copy_avl']}</td>
         <td>{$row['published_at']}</td>
-        <td>{$row['book_cover']}</td>
+        
+        <td><img src="{$img_add}" alt="No Cover Pic"></td>
     </tr>
 HTM;
     
