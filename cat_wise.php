@@ -22,20 +22,42 @@ try {
 ?>
 
 <?php
+if (isset($_POST['cat_id'])) {
 
-$cat_id =(int) filter_input(INPUT_POST, 'cat_id', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    $_SESSION['cat_id']= (int) filter_input(INPUT_POST, 'cat_id', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+}
+
+
+$cat_id = $_SESSION['cat_id'];
+
+if(isset($_POST['page'])){
+    $page = (int) filter_input(INPUT_POST, 'page', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+}else{
+    $page = 1;
+}
+
+//Number of book per page
+$record_per_page = 2;
+//Offset from
+$start_from = ($page -1) * $record_per_page;
+
 
 //Select all books with that cat id
 $sql_select = <<<SQL
-SELECT * FROM book WHERE cat_id = {$cat_id}
+SELECT * FROM book WHERE cat_id = {$cat_id} LIMIT $start_from,$record_per_page
 SQL;
-try{
-    $result=$db->query($sql_select);
+try {
+    $result = $db->query($sql_select);
     $result = $result->fetchAll();
-}catch(PDOException $ex){
+} catch (PDOException $ex) {
     exit($ex);
 }
+
+
+
+
 $output = <<<HTM
+<table>
 <tr>
 
         <th>Title</th>
@@ -51,7 +73,7 @@ HTM;
 
 foreach ($result as $row) {
 
-     $img_add = ($row['book_cover'] !== "default.png") ? '../thumb/' . $row['book_cover'] : '../asset/' . $row['book_cover'];
+    $img_add = ($row['book_cover'] !== "default.png") ? '../thumb/' . $row['book_cover'] : '../asset/' . $row['book_cover'];
 
     $output .= <<<HTM
     <tr>
@@ -62,11 +84,46 @@ foreach ($result as $row) {
         <td>{$row['user_name']}</td>
         <td>{$row['copy_avl']}</td>
         <td>{$row['published_at']}</td>
-        
+
         <td><img src="{$img_add}" alt="No Cover Pic"></td>
     </tr>
 HTM;
-    
+
 }
+
+$output .= <<<HTM
+</table>
+<div id="p_div" align="center">
+HTM;
+
+// Total number of records
+$sql_select_count = <<<SQL
+SELECT COUNT(cat_id) FROM book WHERE cat_id = {$cat_id}
+SQL;
+
+try {
+    $totl = $db->query($sql_select_count);
+    $total_records = $totl->fetch();
+} catch (PDOException $ex) {
+    exit($ex);
+}
+
+$total_pages = ceil($total_records['COUNT(cat_id)']/$record_per_page);
+
+//Page Buttons
+for ($i=1; $i <= $total_pages ; $i++) { 
+    $output .=<<<HTM
+<span class="p_link" style="cursor:pointer; padding:6px;border:1px solid #ccc;" id="{$i}">
+{$i}
+</span>
+
+HTM;
+
+}
+
+$output .= "</div>";
+
+
+
 echo "$output";
 ?>

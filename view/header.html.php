@@ -1,5 +1,5 @@
 <?php
-require_once "C:\\xampp\htdocs\\rs_book\\session.php";
+require_once "C:\\xampp\htdocs\\rs_book_cat\\session.php";
 // session_start();
 ?>
 <!DOCTYPE html>
